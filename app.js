@@ -21,8 +21,19 @@ const initializeDb = async () => {
 }
 
 initializeDb()
+
 app.get('/players/', async (request, response) => {
   const getPlayersQuery = `select * from cricket_team`
   const playersArray = await db.all(getPlayersQuery)
   response.send(playersArray)
 })
+
+app.post('/players/', async (request, response) => {
+  const playerDetails = request.body
+  const {player_id, player_name, jersey_number, role} = playerDetails
+  const updatePlayerDetails = `INSERT INTO cricket_team (player_id, player_name, jersey_number, role) VALUES ('${player_id}', '${player_name}', '${jersey_number}', '${role}')`
+  const dbResponse = await db.run(updatePlayerDetails)
+  const playerId = dbResponse.lastID
+  response.send(`Player Added to Team`)
+})
+
